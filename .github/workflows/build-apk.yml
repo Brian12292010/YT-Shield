@@ -1,28 +1,8 @@
-      - name: Align Java and Kotlin JVM targets
-        run: |
-          cat >> extracted/YT_Shield_Android/app/build.gradle.kts <<'EOF'
-
-          android {
-              compileOptions {
-                  sourceCompatibility = JavaVersion.VERSION_17
-                  targetCompatibility = JavaVersion.VERSION_17
-              }
-          }
-
-          tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-              kotlinOptions {
-                  jvmTarget = "17"
-              }
-          }
-          EOF
-          name: Build YT Shield APK
+name: Build YT Shield APK
 
 on:
   push:
     branches: [main]
-    paths:
-      - 'YT_Shield_Android_v0.5.zip'
-      - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
 permissions:
@@ -50,6 +30,23 @@ jobs:
           unzip -q YT_Shield_Android_v0.5.zip -d extracted
           test -f extracted/YT_Shield_Android/settings.gradle.kts
           test -f extracted/YT_Shield_Android/app/build.gradle.kts
+      - name: Align Java and Kotlin JVM targets
+        run: |
+          cat >> extracted/YT_Shield_Android/app/build.gradle.kts <<'EOF'
+
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+          }
+
+          tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          }
+          EOF
       - name: Build debug APK
         run: |
           cd extracted/YT_Shield_Android
